@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+    <header>
+        <% if flash[:errors] %>
+            <% flash[:errors].each do |e| %>
+            <p id="error"><%= e %></p>  
+            <% end %>
+        <% end %>
+        <div id="header_container">
+            <h2>Hello, <%= @user.first_name %></h2>
+            <a href="/shoes">Go to All Products</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </header>
+    <body>
+    	<div class="post_content">
+            <h3>Sell Product</h3>
+            <form action="/shoes/new" method="POST">
+                <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                <label for="name">Product</label>
+                <input type="text" class="form-control" id="product" name="shoes[product]" value="">
+                <label for="name">Sell For</label>
+                <input type="text" class="form-control" id="amount" name="shoes[amount]" value="">
+                <input type="hidden" id="user_id" name="shoes[user_id]" value="<%=@user.id%>">
+                <input type="submit" value="Sell" class="content_submit">
+            </form>
+        </div>
+        <h3>Your products that are not yet sold:</h3>
+        <div style='border: 2px solid black; height :200px; overflow: scroll'>
+	        <div style= 'display: inline-block'>
+	            <p>Product</p>
+	            <% @usershoes.each do |shoe| %>
+	            	<% unless @sold.find_by_shoe_id(shoe.id) %>
+	           			<p><%= shoe.product %></p>
+	           		<% end %>
+	            <% end %>
+	        </div>
+	        <div style= 'display: inline-block'>
+	            <p display: inline-block>Date Posted</p>
+	            <% @usershoes.each do |shoe| %>
+	            	<% unless @sold.find_by_shoe_id(shoe.id) %>
+	           			<p><%= shoe.created_at %></p>
+	           		<% end %>
+	            <% end %>
+	        </div>
+	        <div style= 'display: inline-block'>
+	            <p display: inline-block>Amount</p>
+	            <% @usershoes.each do |shoe| %>
+	            	<% unless @sold.find_by_shoe_id(shoe.id) %>
+	           			<p><%= shoe.amount %></p>
+	           		<% end %>
+	            <% end %>
+	        </div>
+	        <div style= 'display: inline-block'>
+	            <p display: inline-block>Action</p>
+	            <% @usershoes.each do |shoe| %>
+	            	<% unless @sold.find_by_shoe_id(shoe.id) %>
+	           			<p><a href="shoes/delete/<%=shoe.id%>">Remove</a></p>
+	           		<% end %>
+	            <% end %>
+	        </div>
+	    </div>
+
+        <h3>Sales</h3>
+        <div style='border: 2px solid black; height :200px; overflow: scroll'>
+            <div style= 'display: inline-block'>
+	            <p style= 'display: block'>Product</p>
+	            <% @shoessold.each do |sold| %>
+	           		<p><%= sold.shoe.product %></p>
+	            <% end %>
+	        </div>
+
+	        <div style= 'display: inline-block'>
+	            <p display: inline-block>Date Bought</p>
+	            <% @shoessold.each do |sold| %>
+	           		<p><%= sold.created_at %></p>
+	            <% end %>
+	        </div>
+	        <div style= 'display: inline-block'>
+	            <p display: inline-block>Buyer</p>
+	            <% @shoessold.each do |sold| %>
+	           		<p><%= sold.buyer.first_name %> <%= sold.buyer.last_name %></p>
+	            <% end %>
+	        </div>
+	        <div style= 'display: inline-block'>
+	            <p display: inline-block>Amount</p>
+	            <% @shoessold.each do |sold| %>
+	           		<p><%= sold.shoe.amount %></p>
+	           		<% @sale_amount += sold.shoe.amount %>
+	            <% end %>
+	        </div>
+        </div> 
+        <p> Total: $<%= @sale_amount %></p>
+        <h3>Purchases</h3>
+        <div style='border: 2px solid black; height :200px; overflow: scroll'>
+            <div style= 'display: inline-block'>
+	            <p display: inline-block>Product</p>
+	            <% @shoesbought.each do |buy| %>
+	           		<p><%= buy.shoe.product %></p>
+	            <% end %>
+	        </div>
+
+	        <div style= 'display: inline-block'>
+	            <p display: inline-block>Date Bought</p>
+	            <% @shoesbought.each do |buy| %>
+	           		<p><%= buy.created_at %></p>
+	            <% end %>
+	        </div>
+	        <div style= 'display: inline-block'>
+	            <p display: inline-block>Seller</p>
+	            <% @shoesbought.each do |buy| %>
+	           		<p><%= buy.user.first_name %> <%= buy.user.last_name %></p>
+	            <% end %>
+	        </div>
+	        <div style= 'display: inline-block'>
+	            <p display: inline-block>Amount</p>
+	            <% @shoesbought.each do |buy| %>
+	           		<p><%= buy.shoe.amount %></p>
+	           		<% @purchase_amount += buy.shoe.amount %>
+	            <% end %>
+	        </div>
+        </div> 
+        <p> Total: $<%= @purchase_amount %></p>
+    </body>
+</html>

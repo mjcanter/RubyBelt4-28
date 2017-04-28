@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <header>
+        <% if flash[:errors] %>
+            <% flash[:errors].each do |e| %>
+            <p id="error"><%= e %></p>  
+            <% end %>
+        <% end %>
+        <div id="header_container">
+                <h2>Hello, <%= @user.first_name %></h2>
+                <a href="/users">Go to Dashboard</a>
+                <a href="/logout">Logout</a>
+        </div>
+    </header>
+    <body>
+        <h1>All Products</h1>
+            <div class='row col-md-1' style='display:inline-block; width: 500px; margin: 0; vertical-align: top'>
+                <div  style= 'display: inline-block'>
+                    <p>Product</p>
+                    <% @shoes.each do |shoe| %>
+                        <% unless @sold.find_by_shoe_id(shoe.id) %>
+                            <p><%= shoe.product %></p>
+                        <% end %>
+                    <% end %>
+                </div>
+                <div  style= 'display: inline-block'>
+                    <p>Seller</p>
+                    <% @shoes.each do |shoe| %>
+                        <% unless @sold.find_by_shoe_id(shoe.id) %>
+                            <p><%= shoe.user.first_name %> <%= shoe.user.last_name %></p>
+                        <% end %>
+                    <% end %>
+                </div>
+                <div  style= 'display: inline-block'>
+                    <p>Date Posted</p>
+                    <% @shoes.each do |shoe| %>
+                        <% unless @sold.find_by_shoe_id(shoe.id) %>
+                            <p><%= shoe.created_at %></p>
+                        <% end %>
+                    <% end %>
+                </div>
+                <div  style= 'display: inline-block'>
+                    <p>Amount</p>
+                    <% @shoes.each do |shoe| %>
+                        <% unless @sold.find_by_shoe_id(shoe.id) %>
+                            <p><%= shoe.amount %></p>
+                        <% end %>
+                    <% end %>
+                </div>
+                <div  style= 'display: inline-block'>
+                    <p>action</p>
+                    <% @shoes.each do |shoe| %>
+                        <% unless @sold.find_by_shoe_id(shoe.id) %>
+                            <form action='/shoes/buy/' method="POST">
+                                <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                                <input type="hidden" name="buys[shoe_id]" id="likes" value="<%=shoe.id%>">
+                                <input type="hidden" name="buys[user_id]" id="likes" value="<%=shoe.user_id%>">
+                                <input type="hidden" name="buys[buyer_id]" id="likes" value="<%=@user.id%>">
+                                <input type="submit" value="buy">
+                            </form>
+                        <% end %>
+                    <% end %>
+                </div>
+            </div>
+    </body>
+</html>
